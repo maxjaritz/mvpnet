@@ -1,0 +1,48 @@
+TASK: "mvpnet_3d"
+MODEL_2D:
+  TYPE: "UNetResNet34"
+  CKPT_PATH: "outputs/scannet/unet_resnet34/model_080000.pth"
+  UNetResNet34:
+    num_classes: 20
+    p: 0.5  # keep it as pretrained, otherwise it will affect model.eval() behavior
+MODEL_3D:
+  TYPE: "PN2SSG"
+  PN2SSG:
+    num_classes: 20
+DATASET:
+  TYPE: "ScanNet2D3DChunks"
+  TRAIN: "train"
+  VAL: "val"
+  ScanNet2D3DChunks:
+    cache_dir: "data/ScanNet/cache_rgbd"
+    image_dir: "data/ScanNet/scans_resize_160x120"
+    resize: (160, 120)
+    num_rgbd_frames: 3
+    k: 3
+    augmentation:
+      z_rot: (-180, 180)
+      flip: 0.5
+      color_jitter: (0.4, 0.4, 0.4)
+DATALOADER:
+  NUM_WORKERS: 6
+OPTIMIZER:
+  TYPE: "Adam"
+  BASE_LR: 0.002
+SCHEDULER:
+  TYPE: "MultiStepLR"
+  MultiStepLR:
+    gamma: 0.1
+    milestones: (24000, 32000)
+  MAX_ITERATION: 40000
+TRAIN:
+  BATCH_SIZE: 32
+  LOG_PERIOD: 50
+  SUMMARY_PERIOD: 50
+  CHECKPOINT_PERIOD: 1000
+  MAX_TO_KEEP: 2
+  FROZEN_PATTERNS: ("module:net_2d", "net_2d")
+  LABEL_WEIGHTS_PATH: "mvpnet/data/meta_files/scannetv2_train_3d_log_weights_20_classes.txt"
+VAL:
+  BATCH_SIZE: 32
+  PERIOD: 1000
+  REPEATS: 5

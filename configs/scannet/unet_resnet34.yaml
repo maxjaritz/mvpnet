@@ -1,0 +1,39 @@
+TASK: "sem_seg_2d"
+MODEL:
+  TYPE: "UNetResNet34"
+  UNetResNet34:
+    num_classes: 20
+    p: 0.5
+DATASET:
+  ROOT_DIR: "data/ScanNet"
+  TYPE: "ScanNet2D"
+  TRAIN: "train"
+  VAL: "val"
+  ScanNet2D:
+    resize: (160, 120)
+    augmentation:
+      color_jitter: (0.4, 0.4, 0.4)
+      flip: 0.5
+DATALOADER:
+  NUM_WORKERS: 4
+OPTIMIZER:
+  TYPE: "SGD"
+  BASE_LR: 0.005
+  WEIGHT_DECAY: 1e-4
+SCHEDULER:
+  TYPE: "MultiStepLR"
+  MultiStepLR:
+    gamma: 0.1
+    milestones: (60000, 70000)
+  MAX_ITERATION: 80000
+TRAIN:
+  BATCH_SIZE: 32
+  LOG_PERIOD: 100
+  SUMMARY_PERIOD: 100
+  CHECKPOINT_PERIOD: 1000
+  MAX_TO_KEEP: 2
+  LABEL_WEIGHTS_PATH: "mvpnet/data/meta_files/scannetv2_train_2d_log_weights_20_classes.txt"
+VAL:
+  BATCH_SIZE: 32
+  PERIOD: 2000
+  LOG_PERIOD: 100

@@ -1,0 +1,28 @@
+name: mvpnet
+channels:
+  - defaults
+  - conda-forge
+  - pytorch
+dependencies:         # everything under this, installed by conda
+- python=3.6
+- pip
+- pytorch=1.2.0
+- torchvision=0.4.0
+- cudatoolkit=10.0
+- future
+- tensorboard
+- numpy
+- scipy
+- scikit-learn
+- h5py
+- cython
+- tqdm
+- natsort
+- tabulate
+- yacs
+- pytest
+- opencv
+- matplotlib
+- plyfile
+- pip:                # everything under this, installed by pip
+  - open3d==0.8.0

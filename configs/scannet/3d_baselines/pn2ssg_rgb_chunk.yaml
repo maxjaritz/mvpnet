@@ -1,0 +1,35 @@
+TASK: "sem_seg_3d"
+MODEL:
+  TYPE: "PN2SSG"
+  PN2SSG:
+    in_channels: 3
+DATASET:
+  ROOT_DIR: "data/ScanNet/cache_3d"
+  TYPE: "ScanNet3DChunks"
+  TRAIN: "train"
+  VAL: "val"
+  ScanNet3DChunks:
+    use_color: True
+DATALOADER:
+  NUM_WORKERS: 4
+OPTIMIZER:
+  TYPE: "Adam"
+  BASE_LR: 0.004
+SCHEDULER:
+  TYPE: "MultiStepLR"
+  MultiStepLR:
+    gamma: 0.1
+    milestones: (24000, 32000)
+  MAX_ITERATION: 40000
+TRAIN:
+  BATCH_SIZE: 32
+  LOG_PERIOD: 100
+  SUMMARY_PERIOD: 100
+  CHECKPOINT_PERIOD: 1000
+  MAX_TO_KEEP: 3
+  AUGMENTATION: (("CropPad", 8192), "RandomRotateZ",)
+VAL:
+  BATCH_SIZE: 32
+  PERIOD: 1000
+  REPEATS: 3
+  AUGMENTATION: (("CropPad", 8192),)
